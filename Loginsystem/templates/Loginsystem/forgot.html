@@ -1,0 +1,181 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Forget password
+    </title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <style>
+      *{
+        margin: 0;
+        padding: 0;
+      }
+      body{
+        height: 100vh;
+        background-image: url('{% static "images/background.jpg" %}');
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      .alert{
+        width: 97%;
+      }
+      main{
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .main{
+        height: 400px;
+        width: 40%;
+        background-color: white;
+        border-radius: 40px;
+        display: flex;
+        padding: 10px;
+      }
+      .main .formdata{
+        height: 100%;
+        width: 100%;
+      }
+      .main .formdata .company-name{
+        height: 20%;
+        width: 100%;
+        text-align: center;
+        padding: 20px;
+      }
+      .main .formdata .form{
+        height: 85%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .main .formdata .form form{
+        height: auto;
+        width: 80%;
+        font-size: 20px;
+      }
+      .main .formdata .form form input{
+        height: 40px;
+        width: 90%;
+        border: 1px solid black;
+        outline: none;
+        font-size: 20px;
+        margin-bottom: 10px;
+        border-color: gray;
+      }
+      .main .formdata .form form .signuplink{
+        display: none;
+      }
+      .main .formdata .form form .forgotlink{
+        height: auto;
+        width: 90%;
+        display: flex;
+        justify-content: right;
+        align-items: center;
+      }
+      .main .formdata .form form .forgotlink a{
+        text-decoration: none;
+      }
+      .main .formdata .form form .forgotlink a h5{
+        width: 170px;
+        text-align: right;
+        color: gray;
+        cursor: pointer;
+      }
+      @media screen and (max-width: 1000px){
+        .main{
+          height: 400px;
+        }
+        .main .formdata .form form{
+          width: 100%;
+        }
+      }
+      @media screen and (max-width: 800px){
+        .main{
+          width: 98%;
+        }
+      }
+      @media screen and (max-width: 700px){
+        .main .formdata .form form{
+          width: 98%;
+        }
+      }
+      @media screen and (max-width: 600px){
+        
+        .main .formdata{
+          width: 100%;
+        }
+        .main .formdata .company-name{
+          justify-content: center;
+        }
+        .main .formdata .form form input{
+          width: 99%;
+        }
+        .main .formdata .form form .signuplink{
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    {% if messages %}
+    <ul class="messages" id="message">
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+          {{message}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+      <main>
+        <div class="main">
+          <div class="formdata">
+            <div class="company-name">
+              <h2>Crowd Funding</h2>
+            </div>
+            <div class="form">
+              <form action="/forgot_otp/" method="post">{% csrf_token %}
+                <label for="">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email_id" required>
+                  <button type="submit" name="id" id="email_data" class="btn btn-primary">send otp</button>
+              </form>
+              <form action="/forgot_password/" method="post">{% csrf_token %}
+                <label for="">Enter otp</label>
+                {% if enable_otp == 1 %}
+                <input type="text" name="mail_id" id="mail_id" hidden>
+                <input type="number" class="form-control" id="otp" name="otp" required>
+                <button type="submit" name="id" id="forgot_btn" class="btn btn-primary">Check</button>
+                {% else %}
+                <input type="number" class="form-control" id="otp" name="otp" disabled>
+                <button type="submit" name="id" class="btn btn-primary" disabled>Check</button>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+  </body>
+  <script>
+    setTimeout(() => {
+      if(document.getElementById("message")!=null){
+        document.getElementById("message").style.display = "none";
+      }
+    }, 2000);
+    document.getElementById("email_data").addEventListener("click",()=>{
+      let mail = document.getElementById("email").value;
+      let item = {
+        "email":mail,
+      }
+      localStorage.setItem("user_data",JSON.stringify(item));
+    })
+    data = JSON.parse(localStorage.user_data);
+    document.getElementById("mail_id").value = data["email"];
+    console.log(document.getElementById("mail_id").value)
+  </script>
+</html>

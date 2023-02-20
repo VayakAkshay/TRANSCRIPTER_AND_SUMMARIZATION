@@ -1,0 +1,48 @@
+{% extends 'Mainpage/basic.html' %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block title %}
+    About - Transcripter
+    {% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    {% block style %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+        .container{
+            height: auto;
+            width: 100%;
+            margin-top: 150px;
+            font-family: 'Roboto', sans-serif;
+            padding: 20px;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            border-radius: 20px;
+        }
+    </style>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div class="container">
+      <h2 style="text-align: center; margin-bottom: 20px;">About Us</h2>
+        <h4>This project proposes a video summarizing system based on natural language processing (NLP) and Machine Learning to summarize the YouTube video transcripts without losing the key elements. The quantity of videos available on web platforms is steadily expanding. The content is made available globally, primarily for educational purposes. Additionally, educational content is available on YouTube, Facebook, Google, and Instagram. A significant issue of extracting information from videos is that unlike an image, where data can be collected from a single frame, a viewer must watch the entire video to grasp the context. This study aims to shorten the length of the transcript text of the given video. The suggested method involves retrieving transcripts from the video link provided by the user and then summarizing the text by using Hugging Face Transformers and Pipelining. The built model accepts video links and the required summary duration as input from the user and generates a summarized transcript as output. According to the results, the final translated text was obtained in less time when compared with other proposed techniques. Furthermore, the video’s central concept is accurately present in the final text without any deviations.
+        </h4>
+    </div>
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  </body>
+  {% block script %}
+  <script>
+    document.getElementById("linkbtn").addEventListener("click",function(){
+        document.getElementById("form1").style.display = "none";
+        document.getElementById("form2").style.display = "flex";
+    })
+    document.getElementById("filebtn").addEventListener("click",function(){
+        document.getElementById("form1").style.display = "flex";
+        document.getElementById("form2").style.display = "none";
+    })
+  </script>
+  {% endblock %}
+</html>

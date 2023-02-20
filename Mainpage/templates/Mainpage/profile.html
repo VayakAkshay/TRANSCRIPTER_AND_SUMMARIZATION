@@ -1,0 +1,110 @@
+{% extends "Mainpage/basic.html" %}
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block title %} Profile - {{user.first_name}} {{user.last_name}}{% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/6e04d39f81.js" crossorigin="anonymous"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    {% block style %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <style>
+        body {
+            background-color: white;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .container{
+            margin-top: 120px;
+        }
+        .container .logout{
+            width: 100%;
+        }
+        .container .logout form button{
+            width: 100%;
+        }
+        .container .profile{
+            height: auto;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container .profile .main{
+            height: 100%;
+            width: 80%;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .container .profile .main .part1{
+            width: 50%;
+        }
+        .container .profile .main .part2{
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        @media screen and (max-width: 1000px) {
+            .container .profile .main{
+                width: 100%;
+            }
+            .container .profile .main .part1{
+                text-align: center;
+                height: 50%;
+                width: 100%;
+            }
+            .container .profile .main .part2{
+                height: 100px;
+                width: 100%;
+            }
+        }
+    </style>
+    {% endblock %}
+</head>
+
+<body>
+    {% block body %}
+    <div class="container">
+        <div class="profile">
+            <div class="main">
+                <div class="part1">
+                    <h5>Full Name - {{user.first_name}} {{user.last_name}}</h5>
+                    <h5>Email - {{user.username}}</h5>
+                    <h5>Mobile No - {{user.email}}</h5>
+                </div>
+                <div class="part2">
+                    <form action="/edit/" method="post"> {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Edit Profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="logout">
+            <form action="/logout/" method="post"> {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Logout</button>
+            </form>
+        </div>
+    </div>
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+</body>
+{% block script %}
+{% endblock %}
+
+</html>
