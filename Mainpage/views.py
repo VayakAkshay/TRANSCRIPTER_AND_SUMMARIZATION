@@ -8,13 +8,14 @@ from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 import cv2
 from pathlib import Path
 from moviepy.editor import VideoFileClip
-from .models import Myfiles
+from .models import Myfiles,ContactForm
 from .forms import FileForm
 import os
 from transformers import pipeline
 from youtube_transcript_api import YouTubeTranscriptApi
 import shutil
 from threading import Timer
+import re
 
 def HandlePassword(request):
     if request.method == "POST":
@@ -46,6 +47,14 @@ def Homepage(request):
 
 def RemoveData():
     shutil.rmtree("media/mydoc/")
+
+def Find(string):
+    regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+    url = re.findall(regex, string)
+    if(url):
+        return True
+    else:
+        return False
 
 def UploadFile(request):
     form  = FileForm()
@@ -117,38 +126,43 @@ def UploadFile(request):
         datas = {"data": data,
                  "full":result}
         data_list = [datas]
-        return render(request, "Mainpage/index.html",{"form":form,"data_list":data_list})
-    return render(request, "Mainpage/index.html",{"form":form})
+        return render(request, "Mainpage/byfile.html",{"form":form,"data_list":data_list})
+    return render(request, "Mainpage/byfile.html",{"form":form})
 
 def LinkScript(request):
     form = FileForm()
     if request.method == "POST":
         link = request.POST.get("link")
-        video_id = link.split("=")[-1]
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
-        result = ""
-        for i in transcript:
-            result += ' ' + i["text"]
-        summarizer = pipeline('summarization')
-        summary = ""
-        num_iters = int(len(result)/1000)
-        summarized_text = []
-        for i in range(0, num_iters + 1):
-            start = 0
-            start = i * 1000
-            end = (i + 1) * 1000
-            print("input text \n" + result[start:end])
-            out = summarizer(result[start:end])
-            out = out[0]
-            out = out['summary_text']
-            print("Summarized text\n"+out)
-            summarized_text.append(out)
-        data = summarized_text[0]
-        datas = {"data": data,
-                 "full":result}
-        data_list = [datas]
-        return render(request, "Mainpage/index.html",{"form":form,"data_list":data_list})
-    return render(request, "Mainpage/index.html",{"form":form})
+        ans = Find(link)
+        if(ans):
+            video_id = link.split("=")[-1]
+            transcript = YouTubeTranscriptApi.get_transcript(video_id)
+            result = ""
+            for i in transcript:
+                result += ' ' + i["text"]
+            summarizer = pipeline('summarization')
+            summary = ""
+            num_iters = int(len(result)/1000)
+            summarized_text = []
+            for i in range(0, num_iters + 1):
+                start = 0
+                start = i * 1000
+                end = (i + 1) * 1000
+                print("input text \n" + result[start:end])
+                out = summarizer(result[start:end])
+                out = out[0]
+                out = out['summary_text']
+                print("Summarized text\n"+out)
+                summarized_text.append(out)
+            data = summarized_text[0]
+            datas = {"data": data,
+                    "full":result}
+            data_list = [datas]
+            return render(request, "Mainpage/bylink.html",{"form":form,"data_list":data_list})
+        else:
+            messages.warning(request,"Please Enter Valid link")
+            return render(request, "Mainpage/bylink.html",{"form":form})
+    return render(request,"Mainpage/bylink.html")
 
 def Aboutpage(request):
     return render(request, "Mainpage/about.html")
@@ -173,6 +187,21 @@ def editpage(request):
         User.objects.filter(username = user).update(username = email)
         return redirect('/profile/')
     return render(request,'Mainpage/profile')
+
+def Comming_Soon(request):
+    return render(request,"Mainpage/comming.html")
+
+def contactPage(request):
+    contact = ContactForm()
+    if request.method == "POST":
+        email = request.POST.get("email")
+        message = request.POST.get("message")
+        contact.email = email
+        contact.message = message
+        contact.save()
+        messages.success(request,"Your form submitted successfully")
+        return redirect("/contact/")
+    return render(request,"Mainpage/contact.html")
 
 def logout_page(request):
     logout(request)

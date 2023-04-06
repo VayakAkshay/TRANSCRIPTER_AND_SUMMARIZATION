@@ -1,0 +1,173 @@
+{% extends 'Mainpage/basic.html' %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block title %}
+    Comming Soon
+    {% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    {% block style %}
+    <style>
+        body {
+            background: #000;
+        }
+
+        .comming-soon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-flow: column;
+            position: relative;
+            height: 100vh;
+        }
+
+        .comming-soon .circle {
+            width: 250px;
+            height: 250px;
+            background: #000;
+            border-radius: 100%;
+            -webkit-animation: shadow 2s linear 2s infinite alternate;
+            animation: shadow 2s linear 2s infinite alternate;
+        }
+
+        .comming-soon .form-group {
+            width: 450px;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+        }
+
+        .comming-soon .form-group .text {
+            color: #efefef;
+            letter-spacing: 15px;
+            font-size: 20px;
+        }
+
+        .comming-soon .form-group label {
+            color: #efefef;
+            font-size: 15px;
+            margin-top: 40px;
+            margin-bottom: 15px;
+        }
+
+        .comming-soon .form-group .input-group {
+            width: 100%;
+        }
+
+        .comming-soon .form-group .input-group input {
+            border-radius: 15px 0px 0px 15px;
+            background: rgba(255, 255, 255, 0);
+            border-color: #3e2845;
+            padding-left: 15px;
+        }
+
+        .comming-soon .form-group .input-group input:focus {
+            box-shadow: none !important;
+            border-color: #3e2845 !important;
+            background: #efefef;
+        }
+
+        .comming-soon .form-group .input-group .input-group-text {
+            border-radius: 0px;
+            padding: 0px;
+            border: none;
+            background: transparent;
+        }
+
+        .comming-soon .form-group .input-group .input-group-text button {
+            border: 1px solid #3e2845;
+            border-radius: 0px 15px 15px 0px;
+            background: #3e2845;
+            padding: 10px 20px;
+            color: #fff;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+
+        .comming-soon .form-group .input-group .input-group-text button:hover {
+            cursor: pointer;
+            background: #35223b;
+        }
+
+        .comming-soon .form-group .input-group .input-group-text button:focus {
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        @-webkit-keyframes shadow {
+            0% {
+                box-shadow: 0px -3px 2px #a85067;
+            }
+
+            25% {
+                box-shadow: 0px -6px 4px #a85067;
+            }
+
+            50% {
+                box-shadow: 0px -9px 6px #a85067;
+            }
+
+            75% {
+                box-shadow: 0px -12px 8px #a85067;
+            }
+
+            100% {
+                box-shadow: 0px -15px 10px #a85067;
+            }
+        }
+
+        @keyframes shadow {
+            0% {
+                box-shadow: 0px -3px 2px #a85067;
+            }
+
+            25% {
+                box-shadow: 0px -6px 4px #a85067;
+            }
+
+            50% {
+                box-shadow: 0px -9px 6px #a85067;
+            }
+
+            75% {
+                box-shadow: 0px -12px 8px #a85067;
+            }
+
+            100% {
+                box-shadow: 0px -15px 10px #a85067;
+            }
+        }
+    </style>
+    {% endblock %}
+</head>
+
+<body>
+    {% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="comming-soon">
+                    <div class="circle"></div>
+                    <div class="form-group">
+                        <p class="text">COMMING SOON</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</body>
+{% block script %}
+<script>
+
+</script>
+{% endblock %}
+
+</html>

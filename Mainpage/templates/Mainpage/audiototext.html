@@ -1,0 +1,211 @@
+{% extends 'Mainpage/basic.html' %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block title %}
+    Home - Transcripter
+    {% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    {% block style %}
+    <style>
+        .main {
+            height: 300px;
+            width: 100%;
+            margin-top: 100px;
+        }
+
+        .main .buttons {
+            height: 100px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .main .form1 {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            display: none;
+        }
+
+        .main .form1 form {
+            width: 50%;
+        }
+
+        .main .form2 {
+            width: 100%;
+            /* display: none; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main .form2 form {
+            width: 50%;
+        }
+
+        .container {
+            min-height: 100px;
+            width: 100%;
+            border: 2px solid black;
+            padding: 20px;
+        }
+
+        @media screen and (max-width: 900px) {
+            .main .form1 form {
+                width: 80%;
+            }
+
+            .main .form2 form {
+                width: 80%;
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            .main .form1 form {
+                width: 95%;
+            }
+
+            .main .form2 form {
+                width: 95%;
+            }
+        }
+
+        .messages {
+            width: 97%;
+        }
+    </style>
+    {% endblock %}
+</head>
+
+<body>
+    {% block body %}
+    {% if messages %}
+    <ul class="messages" id="message">
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="main">
+        <div class="buttons">
+            <button type="button" id="linkbtn" class="btn btn-info">By Link</button>
+            <button type="button" id="filebtn" class="btn btn-info">By File</button>
+        </div>
+        <div class="form1" id="form1">
+            <form action="/upload_file/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <div class="mb-3">
+                    <label for="" class="form-label">Enter Video File: </label>
+                    {{form}}
+                    <div id="error_form" style="color: red;"></div>
+                </div>
+                {% if user.is_authenticated %}
+                <button type="submit" class="btn btn-primary mb-3">Submit</button>
+                {% else %}
+                <button type="submit" class="btn btn-primary mb-3" disabled>Submit</button>
+                {% endif %}
+            </form>
+        </div>
+        <div class="form2" id="form2">
+            <form action="/LinkScript/" method="post">{% csrf_token %}
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Enter Link</label>
+                    <input type="text" name="link" class="form-control" required>
+                </div>
+                {% if user.is_authenticated %}
+                <button type="submit" class="btn btn-primary mb-3">Submit</button>
+                {% else %}
+                <button type="submit" class="btn btn-primary mb-3" disabled>Submit</button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    {% for i in data_list %}
+    <div class="container">
+        <div class="content" id="Summary_data">
+            <h4 style="text-align: center;">Summary</h4>
+            {{i.data}}
+        </div>
+        <button type="submit" id="summary-btn" style="margin-top: 20px;" class="btn btn-primary mb-3">Download</button>
+    </div>
+    <div class="container" style="margin-top: 20px;">
+        <div class="content" id="Fulltext">
+            <h4 style="text-align: center;">Full Text</h4>
+            {{i.full}}
+        </div>
+        <button type="submit" id="full_btn" style="margin-top: 20px;" class="btn btn-primary mb-3">Download</button>
+    </div>
+    {% endfor %}
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</body>
+{% block script %}
+<script>
+    var newDate = new Date().toLocaleDateString() + "_" + new Date().toLocaleTimeString();
+    document.getElementById("linkbtn").addEventListener("click", function () {
+        document.getElementById("form1").style.display = "none";
+        document.getElementById("form2").style.display = "flex";
+    })
+    document.getElementById("filebtn").addEventListener("click", function () {
+        document.getElementById("form1").style.display = "flex";
+        document.getElementById("form2").style.display = "none";
+    })
+    if (document.getElementById("summary-btn")) {
+        document.getElementById("summary-btn").addEventListener("click", function () {
+            const invoice = document.getElementById("Summary_data");
+            html2pdf().from(invoice).save();
+        })
+    }
+    // if(document.getElementById("full_btn")){
+    //     document.getElementById("full_btn").addEventListener("click",function(){
+    //         const invoice = document.getElementById("Fulltext");
+    //         html2pdf().from(invoice).save();
+    //     })
+    // }
+
+    var element = document.getElementById('Fulltext');
+    var opt = {
+        margin: 1,
+        filename: newDate + '.pdf',
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    if(document.getElementById("full_btn")){
+        document.getElementById("full_btn").addEventListener("click",function(){
+            html2pdf().set(opt).from(element).save();
+            html2pdf(element, opt);
+        })
+    }
+
+    var upload_field = document.getElementById("id_my_file");
+    upload_field.onchange = function () {
+        console.log("DOM");
+        if (this.files[0].size > 400000) {
+            this.value = "";
+            document.getElementById("error_form").innerText = "File size must be less than 4 MB";
+        }
+        else {
+            document.getElementById("error_form").innerText = "";
+        }
+    }
+    if (document.getElementById("message")) {
+        setTimeout(function () {
+            document.getElementById("message").style.display = "none";
+        }, 2000)
+    }
+</script>
+{% endblock %}
+
+</html>
